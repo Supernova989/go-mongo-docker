@@ -2,27 +2,12 @@ package config
 
 import (
 	"github.com/spf13/viper"
+	m "go-mongo-api/models"
 	"log"
 )
 
-type Configuration struct {
-	Environment string
-	Mongo       MongoConfiguration
-}
-
-type MongoConfiguration struct {
-	Server      string
-	Database    string
-	Collections MongoCollections
-}
-
-type MongoCollections struct {
-	Users string
-	Posts string
-}
-
-var GetConfig = func() Configuration {
-	conf := Configuration{}
+var GetConfig = func() m.AppConfiguration {
+	conf := m.AppConfiguration{}
 	viper.SetConfigName("config")
 	viper.SetConfigType("yml")
 	viper.AddConfigPath("./config")
@@ -35,7 +20,7 @@ var GetConfig = func() Configuration {
 	if err != nil {
 		log.Panic(err)
 	}
-	collections := MongoCollections{
+	collections := m.MongoCollections{
 		Users: "Users",
 		Posts: "Posts",
 	}

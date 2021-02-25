@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"go-mongo-api/config"
+	m "go-mongo-api/models"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"log"
@@ -10,15 +11,15 @@ import (
 
 var db *mongo.Database
 var gCtx context.Context
-var cnf config.Configuration
+var cnf m.AppConfiguration
 
-func init() {
+func Initialize() {
 	cnf = config.GetConfig()
 	gCtx = context.TODO()
 	db = ConnectDB(gCtx, cnf.Mongo)
 }
 
-func ConnectDB(ctx context.Context, cfg config.MongoConfiguration) *mongo.Database {
+func ConnectDB(ctx context.Context, cfg m.MongoConfiguration) *mongo.Database {
 	conn := options.Client().ApplyURI(cfg.Server)
 
 	log.Printf(

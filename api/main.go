@@ -12,6 +12,8 @@ import (
 )
 
 func main() {
+	database.Initialize()
+
 	postService := &services.PostService{
 		Col: database.GetDB().Collection(config.GetConfig().Mongo.Collections.Posts),
 		Ctx: database.GetGlobalContext(),
