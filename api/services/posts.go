@@ -1,4 +1,4 @@
-package database
+package services
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-type PostInterface interface {
+type IPostService interface {
 	Get(string) (*m.Post, error)
 	Find(interface{}) ([]m.Post, error)
 	Insert(m.Post) (*m.Post, error)
@@ -17,12 +17,12 @@ type PostInterface interface {
 	Delete(string) (m.RequestDelete, error)
 }
 
-type PostClient struct {
+type PostService struct {
 	Ctx context.Context
 	Col *mongo.Collection
 }
 
-func (c *PostClient) Get(id string) (*m.Post, error) {
+func (c *PostService) Get(id string) (*m.Post, error) {
 	post := m.Post{}
 	_id, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
@@ -35,7 +35,7 @@ func (c *PostClient) Get(id string) (*m.Post, error) {
 	return &post, nil
 }
 
-func (c *PostClient) Find(filter interface{}) ([]m.Post, error) {
+func (c *PostService) Find(filter interface{}) ([]m.Post, error) {
 	posts := make([]m.Post, 0)
 	if filter == nil {
 		filter = bson.M{}
@@ -52,7 +52,7 @@ func (c *PostClient) Find(filter interface{}) ([]m.Post, error) {
 	return posts, nil
 }
 
-func (c *PostClient) Insert(docs m.Post) (*m.Post, error) {
+func (c *PostService) Insert(docs m.Post) (*m.Post, error) {
 	res, err := c.Col.InsertOne(c.Ctx, docs)
 	if err != nil {
 		return nil, err
@@ -61,7 +61,7 @@ func (c *PostClient) Insert(docs m.Post) (*m.Post, error) {
 	return c.Get(id)
 }
 
-func (c *PostClient) Update(id string, update interface{}) (m.RequestUpdate, error) {
+func (c *PostService) Update(id string, update interface{}) (m.RequestUpdate, error) {
 	result := m.RequestUpdate{
 		ModifiedCount: 0,
 	}
@@ -101,7 +101,7 @@ func (c *PostClient) Update(id string, update interface{}) (m.RequestUpdate, err
 	return result, nil
 }
 
-func (c *PostClient) Delete(id string) (m.RequestDelete, error) {
+func (c *PostService) Delete(id string) (m.RequestDelete, error) {
 	result := m.RequestDelete{
 		DeletedCount: 0,
 	}
